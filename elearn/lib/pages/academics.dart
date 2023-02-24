@@ -3,6 +3,20 @@ import 'package:flutter/material.dart';
 import '../data/data.dart';
 import '../data/wi_widgets.dart';
 
+/// #Academics Screen
+///
+/// This page has not been layed out yet
+/// It is accessible through the bottom navigation bar
+/// This page will display the user's academic activities
+///
+/// ##For students;
+/// * exams, tests or quizzes they have taken
+/// * Marks, results, grades and certificates
+///
+/// ##For instructors;
+/// * The exams, tests or quizzes they have set
+/// * Marks, results, grades and progress of students taking that course
+
 class AcademicsPage extends StatelessWidget {
   const AcademicsPage({super.key});
 

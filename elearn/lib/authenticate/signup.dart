@@ -8,11 +8,38 @@ import 'package:image_picker/image_picker.dart';
 import '../data/routes.dart';
 import '../data/wi_widgets.dart';
 
+/// #Signing Up
+/// There are 3 screens for signing Up
+/// ### 1. [SignUpMode]
+/// * Gets the type of user
+///
+/// ### 2. [SignUpInfo]
+/// * Gets user's Info
+///
+/// ### 3. [SignUpCredentials]
+/// * Gets user's Credentials
+
+
+/// #[SignUpMode]
+/// This screen lets continue signing up either as an instructor or a student
+/// There are 2 buttons;
+/// * The first for proceeding as a student
+/// * and the second for proceeding as an instructor
+/// This is a [StatelessWidget] as no [Widget] is required to change state
+/// There is another button giving the user and option to signin instead
+
 class SignUpMode extends StatelessWidget {
   const SignUpMode({super.key});
 
+  /// When either button is pressed, the [mode] is passed through the
+  /// @param argument of the [context.goNamed] function
+  /// which passes the argument onto the next route
+  /// The named routes are defined in [main.dart]
   @override
   Widget build(BuildContext context) {
+
+    // Structure has widgets nested in Columns.
+    // Some widgets are separated with spaces by SizedBox
     return Material(
       child: Center(
         child: Padding(
@@ -57,8 +84,12 @@ class SignUpMode extends StatelessWidget {
                   children: [
                     Row(
                       children: [
+                        // Button to continue as a student
                         Expanded(
                           child: OutlinedButton(
+
+                            /// .pushNamed takes in the name of the next route
+                            /// and the @params paramaters as a map
                             onPressed: () {
                               GoRouter.of(context).pushNamed(
                                   '/${RouteNames.signup}/info',
@@ -69,7 +100,7 @@ class SignUpMode extends StatelessWidget {
                                     const EdgeInsets.symmetric(
                                         vertical: 20.0))),
                             child:
-                                const Text("I want to register as a Student"),
+                                const Text("I want to sign up as a Student"),
                           ),
                         ),
                       ],
@@ -136,7 +167,15 @@ class SignUpMode extends StatelessWidget {
   }
 }
 
+/// #[SignUpInfo]
+/// This screen gets user's information such as names, username and institute through form fields
+/// It also gets the user's profile picture from the local device or avatar;
+/// This is a [StatefulWidget] as some widgets change states of their values such as the [TextFormField]s
+
 class SignUpInfo extends StatefulWidget {
+
+  /// This screen has one argument which is the [mode].
+  /// this is the user's [mode] (student or instructor) gotton from the [SignUpMode] screen
   const SignUpInfo({super.key, required this.mode});
   final String mode;
 
@@ -145,13 +184,16 @@ class SignUpInfo extends StatefulWidget {
 }
 
 class _SignUpInfoState extends State<SignUpInfo> {
+
+  /// [_formKey] is used during validation and submitting the form
+  /// The form has different fields for getting values
+  /// * [userFirstName], [userSecondName], [usersUserName] and [usersInstitute]
+  /// * [userImageFile] holds an image [File] selected from the users gallery or camera
+  /// * [userImageFilePath] stores the path of the [userImageFile]
   final _formKey = GlobalKey<FormState>();
   String userFirstName = '';
   String userSecondName = '';
-  String userEmail = '';
   String usersUserName = '';
-  String userPassword = '';
-  String confirmPassword = '';
   String usersInstitute = '';
   String userImageFilePath = '';
   late XFile userImageFile;
@@ -191,6 +233,8 @@ class _SignUpInfoState extends State<SignUpInfo> {
                         ),
                       ],
                     ),
+
+                    /// #### form
                     Form(
                       key: _formKey,
                       autovalidateMode: AutovalidateMode.disabled,
@@ -209,12 +253,20 @@ class _SignUpInfoState extends State<SignUpInfo> {
                               ),
                             ),
                             const SizedBox(height: 20.0),
+
+                            /// [Button] for picking image
+                            /// The button's content is [Container] with an almost black and a camera [Icon]
                             MaterialButton(
+
                               onPressed: () {
+                                /// Function for picking image.
+                                /// Its parameter is the current context (screen)
                                 pickImage(
                                   context: context,
                                 );
                               },
+
+                              // Circular container
                               child: Container(
                                   height: 150,
                                   width: 150,
@@ -222,6 +274,9 @@ class _SignUpInfoState extends State<SignUpInfo> {
                                     shape: BoxShape.circle,
                                     color: Colors.black.withOpacity(0.4),
                                   ),
+
+                                  /// Camera icon is displaye if no image is selected
+                                  /// Else image is displayed in the container as an avatar
                                   child: userImageFilePath == ''
                                       ? const Center(
                                           child: Icon(
@@ -242,6 +297,7 @@ class _SignUpInfoState extends State<SignUpInfo> {
                             const SizedBox(height: 20.0),
                             Row(
                               children: [
+                                // Get First name
                                 Expanded(
                                   child: TextFormField(
                                     keyboardType: TextInputType.text,
@@ -250,12 +306,15 @@ class _SignUpInfoState extends State<SignUpInfo> {
                                     decoration: buildTextFieldDecoration(
                                       label: "First Name",
                                     ),
+
+                                    /// First name is required
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return "required";
                                       }
                                       return null;
                                     },
+
                                     onSaved: (value) {
                                       setState(() {
                                         userFirstName = value!;
@@ -266,6 +325,8 @@ class _SignUpInfoState extends State<SignUpInfo> {
                                 const SizedBox(
                                   width: 10.0,
                                 ),
+
+                                // Get Second name
                                 Expanded(
                                   child: TextFormField(
                                     keyboardType: TextInputType.text,
@@ -292,6 +353,8 @@ class _SignUpInfoState extends State<SignUpInfo> {
                             const SizedBox(
                               height: 15.0,
                             ),
+
+                            // Get usersname
                             TextFormField(
                               decoration:
                                   buildTextFieldDecoration(label: "Username"),
@@ -310,6 +373,8 @@ class _SignUpInfoState extends State<SignUpInfo> {
                             const SizedBox(
                               height: 15.0,
                             ),
+
+                            //Gets institute
                             TextFormField(
                               decoration: buildTextFieldDecoration(
                                   label:
@@ -346,6 +411,8 @@ class _SignUpInfoState extends State<SignUpInfo> {
                               ),
                               Expanded(
                                 flex: 1,
+
+                                /// ####Submit Button
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
@@ -410,6 +477,16 @@ class _SignUpInfoState extends State<SignUpInfo> {
     );
   }
 
+  /// Pick an Image from camera of gallery
+  ///
+  /// Displays a dialog box with 2 button;
+  /// A camera button and a gallery button
+  /// CLicking on the camera button opens the devices camera
+  /// and clicking of gallaery opens up the users gallery
+  /// And image can be taken and stored by the [ImagePicker] from the [image_picker.dart] package
+  /// The [ImagePicker] has a source argument which could either be [ImageSource.camera] or [ImageSource.gallery]
+  /// The Future image [File] return is stored in [userImageFile] and the path in the [userImageFilePath]
+  /// If no image is selected, a [Snackbar] displays 'no image selected'
   void pickImage({required BuildContext context}) {
     showDialog(
         context: context,
@@ -432,6 +509,7 @@ class _SignUpInfoState extends State<SignUpInfo> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            /// Select from camera
                             TextButton(
                               onPressed: () async {
                                 print("klfd");
@@ -441,15 +519,15 @@ class _SignUpInfoState extends State<SignUpInfo> {
                                   setState(() {
                                     userImageFilePath = userImageFile.path!;
                                   });
-                                  print(
-                                      "Selected Image: ${userImageFile?.path} :: $userImageFile");
+
+                                  // closes the dialog box after picking
                                   Navigator.pop(context);
                                 } else {
-                                  print(
-                                      "Selected Image: ${userImageFile?.path} :: $userImageFile");
                                   setState(() {
                                     userImageFilePath = '';
                                   });
+
+                                  // displays a snackbar if no image is selected
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar((const SnackBar(
                                     content: Text("No image selected"),
@@ -471,6 +549,8 @@ class _SignUpInfoState extends State<SignUpInfo> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+
+                            // Select from gallery
                             TextButton(
                               onPressed: () async {
                                 print("klfd");
@@ -480,12 +560,8 @@ class _SignUpInfoState extends State<SignUpInfo> {
                                   setState(() {
                                     userImageFilePath = userImageFile.path!;
                                   });
-                                  print(
-                                      "Selected Image: ${userImageFile?.path} :: $userImageFile");
                                   Navigator.pop(context);
                                 } else {
-                                  print(
-                                      "Selected Image: ${userImageFile?.path} :: $userImageFile");
                                   setState(() {
                                     userImageFilePath = '';
                                   });
@@ -518,7 +594,14 @@ class _SignUpInfoState extends State<SignUpInfo> {
   }
 }
 
+
+/// #[SignUpCredentials]
+/// Gets users credentials; email and password
 class SignUpCredentials extends StatefulWidget {
+  /// Screen recieves data from the [SignUpInfo] via the routes
+  /// Its recieves the [username], [firstname], [secondname] and [institute]
+  /// thou [institute] is not required
+
   const SignUpCredentials({
     super.key,
     required this.username,
@@ -537,6 +620,10 @@ class SignUpCredentials extends StatefulWidget {
 }
 
 class _SignUpCredentials extends State<SignUpCredentials> {
+
+  /// The [Form] with key [_formKey] gets [userEmail], [userPassword]
+  /// and a second password [confirmPassword] for confirmation from user
+
   final _formKey = GlobalKey<FormState>();
   String userEmail = '';
   String userPassword = '';

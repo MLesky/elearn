@@ -479,30 +479,40 @@ class _ModuleViewState extends State<ModuleView> {
               ],
             ),
             const Divider(height: 20, thickness: 3, color: Colors.black38),
-            modulePDF == null ? const LinearProgressIndicator() : Text(pdfText),
-            Row(
-              children: [
-                ElevatedButton.icon(
-                    onPressed: () {
-                      if (widget.moduleIndex > 0) {
-                        ModuleView(moduleID: "id", moduleIndex:  widget.moduleIndex+1);
-                      }
-                    },
-                    icon: Icon(Icons.arrow_back_ios_rounded),
-                    label: Text("Back")),
-                widget.moduleIndex < Courses.length ? ElevatedButton.icon(
-                    onPressed: () {
-                        ModuleView(moduleID: "id", moduleIndex:  widget.moduleIndex-1);
-                    },
-                    icon: Icon(Icons.arrow_forward_ios_rounded),
-                    label: Text("Back")) : ElevatedButton.icon(
-                    onPressed: () {
-                      ModuleView(moduleID: "id", moduleIndex:  widget.moduleIndex-1);
-                    },
-                    icon: Icon(Icons.done),
-                    label: Text("Finish"))
-              ],
-            )
+            modulePDF == null
+                ? const LinearProgressIndicator()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton.icon(
+                          onPressed: () {
+                            if (widget.moduleIndex > 0) {
+                              ModuleView(
+                                  moduleID: "id",
+                                  moduleIndex: widget.moduleIndex + 1);
+                            }
+                          },
+                          icon: Icon(Icons.arrow_back_ios_rounded),
+                          label: Text("Back")),
+                      widget.moduleIndex < Courses.length
+                          ? ElevatedButton.icon(
+                              onPressed: () {
+                                ModuleView(
+                                    moduleID: "id",
+                                    moduleIndex: widget.moduleIndex - 1);
+                              },
+                              icon: Icon(Icons.arrow_forward_ios_rounded),
+                              label: Text("Back"))
+                          : ElevatedButton.icon(
+                              onPressed: () {
+                                ModuleView(
+                                    moduleID: "id",
+                                    moduleIndex: widget.moduleIndex - 1);
+                              },
+                              icon: Icon(Icons.done),
+                              label: Text("Finish"))
+                    ],
+                  )
           ]),
         ),
       ],

@@ -1,6 +1,10 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-/// Create client
+/// Graph QL
+///
+/// Creating a Graphql client and
+/// Connecting to the graphql's api
+
 final GraphQLClient gqlClient = GraphQLClient(
   /// url for graphql
   link: HttpLink('http://rich-jade-bat-wig.cyclic.app/api'),

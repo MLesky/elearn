@@ -1,12 +1,6 @@
-// class Fontdata {
-//   static const parcifico = "../data/fonts/Pacifico/Pacifico-Regular.ttf";
-//   static const karla = "../data/fonts/Karla/Karla-Regular.ttf";
-//   static const karla_m = "../data/fonts/Karla/Karla-Medium.ttf";
-//   static const karla_mi = "../data/fonts/Karla/Karla-MediumItalic.ttf";
-//   static const karla_b = "../data/fonts/Karla/Karla-SemiBold.ttf";
-//   static const karla_bi = "../data/fonts/Karla/Karla-SemiBoldItalic.ttf";
-// }
 
+
+// Just static data for prototyping
 final List<Map<String, dynamic>> Modules = [
   {
     "name": "Introduction",

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Settings Screen
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 

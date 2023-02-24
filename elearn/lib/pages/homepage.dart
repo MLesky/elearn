@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:hidable/hidable.dart';
-import 'package:elearn/data/data.dart';
 import 'package:elearn/data/wi_widgets.dart';
-import 'package:elearn/pages/settings.dart';
+
+/// HomeScreen / Dashboard
+/// Body is wrapped around a safe area to uhmmm...
+/// well..., give a it a safe area
+///
+/// A list of random courses will be displayed
+/// It uses the [CourseList] class
+/// Check its implementation in the [wi_widgets.dart]
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
