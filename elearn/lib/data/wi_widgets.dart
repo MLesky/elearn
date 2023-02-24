@@ -17,11 +17,16 @@ import '../pages/homepage.dart';
 import '../pages/settings.dart';
 import 'data.dart';
 
+
+/// Decorating the TextFields
 InputDecoration buildTextFieldDecoration({required label}) => InputDecoration(
       labelText: label,
       border: const OutlineInputBorder(),
     );
 
+/// Persistent bottom navigation var [BottomNavBar]
+///
+/// Bottom Navigation Bar
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
 
@@ -32,6 +37,9 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
+
+  /// Items for the bottom nav
+  /// Each item matches with the screens below in the [_buildScreens] list
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
@@ -66,6 +74,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
     ];
   }
 
+  /// It has 4 items [_navBarsItems] for the for different screens
+  /// [HomePage], [CourseList], [AcademicsPage], [SettingsPage]
   List<Widget> _buildScreens() {
     return [
       const HomePage(),
@@ -75,6 +85,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
     ];
   }
 
+  /// The bottom nav itself
+  ///
+  /// It takes as items the [_navBarsItems] which matches with the
+  /// [_buildScreens] as they are being clicked on.
+  /// That is, click on the first [_navBarsItems] opens the first[_buildScreens]
+  /// The [PersistentTabView] uses animation to transit
   @override
   Widget build(BuildContext context) {
     return PersistentTabView(
@@ -113,6 +129,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 }
 
+/// CourseList
+///
+/// Gets courses from the database and displays them as a list
+/// Takes as parameter a [searchFilter] which could be a students ID
+/// and fetches the courses based on those IDs.
+/// But it's optional
+///
 class CourseList extends StatefulWidget {
   final searchFilter;
 
@@ -122,101 +145,11 @@ class CourseList extends StatefulWidget {
   State<CourseList> createState() => _CourseListState();
 }
 
+/// Displays the image of each course, its title and other details as a card
+/// Each course card has either a Continue or Enroll now button depending on
+/// whether the user is enrolled or not in the course
+/// The list of courses is built using the [ListView.Builder]
 class _CourseListState extends State<CourseList> {
-  showCourseDialog(BuildContext context, courseID) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => Dialog(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: ListView(children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset(
-                        "assets/images/${courseID['image']}.jpg",
-                        fit: BoxFit.contain,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        courseID['name'],
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 24.0,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      const Divider(
-                          thickness: 1.0, height: 20, color: Colors.black38),
-                      Text(courseID['info'],
-                          maxLines: 2,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w300, fontSize: 16.0)),
-                      const Divider(
-                          thickness: 3.0, height: 20, color: Colors.black38),
-                      const SizedBox(height: 400, child: Text("Other Info")),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Expanded(
-                              child: Text(
-                                  "Your Instructor(s): ${courseID['instructors'].map((instructor) => instructor)}",
-                                  textAlign: TextAlign.right,
-                                  maxLines: 2,
-                                  style: const TextStyle(
-                                      fontSize: 11,
-                                      fontStyle: FontStyle.italic))),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              style: ButtonStyle(
-                                  padding: MaterialStateProperty.all(
-                                      const EdgeInsets.all(20))),
-                              child: const Text(
-                                "Cancel",
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            CoursePage(courseID: courseID)));
-                              },
-                              style: ButtonStyle(
-                                  padding: MaterialStateProperty.all(
-                                      const EdgeInsets.all(20))),
-                              child: const Text(
-                                "Start",
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ]),
-              ),
-            ));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -226,9 +159,13 @@ class _CourseListState extends State<CourseList> {
           SliverFillRemaining(
               child: Padding(
             padding: const EdgeInsets.fromLTRB(8, 8, 8, 70),
+
+            // Building and displaying courses as a list
             child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: Courses.length,
+
+                // Building each item
                 itemBuilder: (context, index) {
                   double progress = (Random().nextDouble() * 100);
                   return Padding(
@@ -238,12 +175,16 @@ class _CourseListState extends State<CourseList> {
                       children: [
                         SizedBox(
                           width: 300,
+
+                          // Each course as a card
                           child: Card(
                             elevation: 5.0,
                             child: Padding(
                               padding: const EdgeInsets.all(5.0),
                               child: Column(
                                 children: [
+
+                                  // container's background is the course's image
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10),
@@ -273,6 +214,8 @@ class _CourseListState extends State<CourseList> {
                                             const SizedBox(
                                               height: 10,
                                             ),
+
+                                            // Course's name
                                             Text(
                                               Courses[index]['name'],
                                               textAlign: TextAlign.left,
@@ -283,6 +226,8 @@ class _CourseListState extends State<CourseList> {
                                                 color: Colors.white,
                                               ),
                                             ),
+
+                                            // Course's information
                                             Text(Courses[index]['info'],
                                                 maxLines: 2,
                                                 style: const TextStyle(
@@ -291,6 +236,8 @@ class _CourseListState extends State<CourseList> {
                                                     color: Colors.white)),
                                           ],
                                         ),
+
+                                        /// displays the users progress if the user is enrolled in the course
                                         Courses[index]['isLearning']
                                             ? CircularProgressIndicator(
                                                 value: progress / 100,
@@ -309,6 +256,8 @@ class _CourseListState extends State<CourseList> {
                                       Row(
                                         children: [
                                           Expanded(
+                                            /// If the user is enrolled in the course, then the user can continue learning
+                                            /// else can enroll now
                                             child: Courses[index]['isLearning']
                                                 ? OutlinedButton(
                                                     onPressed: () {
@@ -331,8 +280,12 @@ class _CourseListState extends State<CourseList> {
                                                       textScaleFactor: 1.3,
                                                     ),
                                                   )
+
+                                            /// When the user clicks on the enroll button to enroll,
+                                            /// A dialog box opens giving for information about the course
                                                 : OutlinedButton(
                                                     onPressed: () {
+                                                      // dialog box displaying courses info
                                                       showCourseDialog(context,
                                                           Courses[index]);
                                                     },
@@ -342,7 +295,7 @@ class _CourseListState extends State<CourseList> {
                                                                 const EdgeInsets
                                                                     .all(20))),
                                                     child: const Text(
-                                                      "Start Learning",
+                                                      "Enroll Now",
                                                       textScaleFactor: 1.3,
                                                     ),
                                                   ),
@@ -357,6 +310,7 @@ class _CourseListState extends State<CourseList> {
                                             MainAxisAlignment.end,
                                         children: [
                                           Expanded(
+                                            /// Display instructor(s)
                                               child: Text(
                                                   "${Courses[index]['instructors'].map((instructor) => instructor)}",
                                                   textAlign: TextAlign.right,
@@ -383,7 +337,113 @@ class _CourseListState extends State<CourseList> {
       ),
     );
   }
+
+  /// Dialog box which shows course info
+  ///
+  /// This Dialog box opens when a user wants to enroll a course
+  /// Displays just as a course card will but with more information and 2
+  /// Buttons; cancel and start
+  showCourseDialog(BuildContext context, courseID) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: ListView(children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    "assets/images/${courseID['image']}.jpg",
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    courseID['name'],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 24.0,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const Divider(
+                      thickness: 1.0, height: 20, color: Colors.black38),
+                  Text(courseID['info'],
+                      maxLines: 2,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w300, fontSize: 16.0)),
+                  const Divider(
+                      thickness: 3.0, height: 20, color: Colors.black38),
+                  const SizedBox(height: 400, child: Text("Other Info")),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                          child: Text(
+                              "Your Instructor(s): ${courseID['instructors'].map((instructor) => instructor)}",
+                              textAlign: TextAlign.right,
+                              maxLines: 2,
+                              style: const TextStyle(
+                                  fontSize: 11,
+                                  fontStyle: FontStyle.italic))),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(20))),
+                          child: const Text(
+                            "Cancel",
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CoursePage(courseID: courseID)));
+                          },
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(20))),
+                          child: const Text(
+                            "Start",
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ]),
+          ),
+        ));
+  }
 }
+
+
+/// #Module View
+///
+/// Creates the view of each module
+/// A module has a [moduleID] and [moduleIndex] as they are stored in a list
 
 class ModuleView extends StatefulWidget {
   const ModuleView(
@@ -395,7 +455,15 @@ class ModuleView extends StatefulWidget {
 }
 
 class _ModuleViewState extends State<ModuleView> {
+  /// Each Module has [pdflink] and [videoLink]
+  ///
+  /// The [videoLink] is used to fetch and play the video and stores the [_videoController]
+  /// and the [pdfLink] is used to fetch and get the text from it and stores it in [modulePDF]
+
+  // video handler
   late VideoPlayerController _videoController;
+
+  // pdf handler
   // late PdfDocument modulePDF;
   PDFDoc? modulePDF;
   String pdfText = '';
@@ -404,6 +472,8 @@ class _ModuleViewState extends State<ModuleView> {
   String videoLink =
       'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4';
 
+  /// Initialising the [_videoController] and [modulePDF] whenever the widget loads
+  /// The [fetchPdf] is used to initialised [modulePDF]
   @override
   void initState() {
     super.initState();
@@ -432,6 +502,7 @@ class _ModuleViewState extends State<ModuleView> {
               child: Stack(
                 alignment: AlignmentDirectional.center,
                 children: [
+                  /// If video is displayed with play button if it is initialised else a dark container is displayed
                   _videoController.value.isInitialized
                       ? AspectRatio(
                           aspectRatio: _videoController.value.aspectRatio,
@@ -448,6 +519,8 @@ class _ModuleViewState extends State<ModuleView> {
                           height: 175,
                           color: Colors.black.withOpacity(.7),
                         ),
+
+                  // Show circular progress when buffering
                   _videoController.value.isBuffering &&
                           _videoController.value.isPlaying
                       ? CircularProgressIndicator(
@@ -460,8 +533,10 @@ class _ModuleViewState extends State<ModuleView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                /// Play/Pause button
                 IconButton(
                   onPressed: () {
+                    // Play and pause
                     setState(() {
                       _videoController.value.isPlaying
                           ? _videoController.pause()
@@ -479,9 +554,14 @@ class _ModuleViewState extends State<ModuleView> {
               ],
             ),
             const Divider(height: 20, thickness: 3, color: Colors.black38),
-            modulePDF == null
-                ? const LinearProgressIndicator()
-                : Row(
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  /// Displays linear progress if pdf is still loading else displays text in pdf
+                  modulePDF == null
+                      ? const LinearProgressIndicator()
+                      : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton.icon(
@@ -496,29 +576,33 @@ class _ModuleViewState extends State<ModuleView> {
                           label: Text("Back")),
                       widget.moduleIndex < Courses.length
                           ? ElevatedButton.icon(
-                              onPressed: () {
-                                ModuleView(
-                                    moduleID: "id",
-                                    moduleIndex: widget.moduleIndex - 1);
-                              },
-                              icon: Icon(Icons.arrow_forward_ios_rounded),
-                              label: Text("Back"))
+                          onPressed: () {
+                            ModuleView(
+                                moduleID: "id",
+                                moduleIndex: widget.moduleIndex - 1);
+                          },
+                          icon: Icon(Icons.arrow_forward_ios_rounded),
+                          label: Text("Back"))
                           : ElevatedButton.icon(
-                              onPressed: () {
-                                ModuleView(
-                                    moduleID: "id",
-                                    moduleIndex: widget.moduleIndex - 1);
-                              },
-                              icon: Icon(Icons.done),
-                              label: Text("Finish"))
+                          onPressed: () {
+                            ModuleView(
+                                moduleID: "id",
+                                moduleIndex: widget.moduleIndex - 1);
+                          },
+                          icon: Icon(Icons.done),
+                          label: Text("Finish"))
                     ],
                   )
+                ],
+              ),
+            ),
           ]),
         ),
       ],
     );
   }
 
+  /// Fetching pdf from the [pdfLiink]
   Future fetchPdf() async {
     final fetchResult = await PDFDoc.fromURL(pdfLink);
     setState(() {
@@ -535,6 +619,8 @@ class _ModuleViewState extends State<ModuleView> {
   }
 }
 
+
+/// TopToolBar with icon, title and some action buttons
 PreferredSizeWidget TopToolBar(BuildContext context) {
   return AppBar(
     elevation: 0.0,

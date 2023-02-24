@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 /// By default, the screen displays the first module
 /// Each module can have a video, text from a pdf and and image
 /// Below the page are buttons for navigating to the previous or next modules
-///
+/// For more, look at [ModuleView]s
 class CoursePage extends StatelessWidget {
   final courseID;
   int moduleCount = 0;
